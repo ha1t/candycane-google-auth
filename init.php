@@ -9,11 +9,12 @@ $hookContainer->registerElementHook(
 	false // it should be true when you want to inject before the target template.
 );
 
-require_once 'Vendor/facebook-php-sdk/src/facebook.php';
-$facebook = new Facebook(
-	array(
-		'appId' => '127953654009621',
-		'secret' => '4a38882fe46f835807342bc075dcf216',
-	)
-);
-ClassRegistry::addObject('Facebook', $facebook);
+$settingContainer = ClassRegistry::getObject('SettingContainer');
+$settingContainer->addSystemSetting(array(
+	'name' => 'cc_facebook',
+	'partial' => '../../Plugin/CcFacebook/View/Element/settings',
+	'label' => __('Facebook Plugin')
+));
+if (!class_exists('Facebook')) {
+	require_once 'Vendor/facebook-php-sdk/src/facebook.php';
+}
