@@ -1,11 +1,11 @@
 <?php
 	class AccountsController extends CcFacebookAppController {
 		
-		public $uses = array(
-			'User',
-			'CustomValue',
-			'Member'
-		);
+	public $uses = array(
+		'User',
+		'CustomValue',
+		'Member'
+	);
 		
 	public function login() {
 		$facebook = new Facebook(
@@ -92,8 +92,12 @@
 		if ($updated) {
 			$this->logged_user($data[0]);
 		}
-		$this->redirect('/');
-
+		
+		if (isset($this->request->query['back_url'])) {
+			$this->redirect($this->request->query['back_url']);
+		} else {
+			$this->redirect('/');
+		}
 	}
 	
 	public function logged_user($user) {
@@ -109,6 +113,24 @@
 			$this->currentuser = null;
 			$this->Session->write('user_id', null);
 		}
+	}
+	
+	public function import_member() {
+
+		//find project from identity
+		
+		
+		//find member from facebook group
+		$facebook = new Facebook(
+			array(
+				'appId' => $this->Setting->fb_appid,
+				'secret' => $this->Setting->fb_secret,
+			)
+		);
+		ClassRegistry::addObject('Facebook', $facebook);
+
+		
+	
 	}
 }
 

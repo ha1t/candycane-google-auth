@@ -21,7 +21,8 @@
 				 'redirect_uri' => $this->Html->url(array(
 					 'controller' => 'accounts',
 					 'action' => 'login',
-					 'plugin' => 'cc_facebook'
+					 'plugin' => 'cc_facebook',
+					 '?' => array('back_url' => $back_url)
 				 ),true
 				)
 			)
