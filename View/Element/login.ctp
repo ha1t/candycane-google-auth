@@ -17,7 +17,7 @@
 		$this->Html->image('/cc_facebook/img/facebook.png'),
 		$facebook->getLoginurl(
 			array(
-				'scope' => 'email',
+				'scope' => 'email,user_groups',
 				 'redirect_uri' => $this->Html->url(array(
 					 'controller' => 'accounts',
 					 'action' => 'login',

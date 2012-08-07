@@ -2,7 +2,9 @@
 	class AccountsController extends CcFacebookAppController {
 		
 		public $uses = array(
-			'User'
+			'User',
+			'CustomValue',
+			'Member'
 		);
 		
 	public function login() {
@@ -16,7 +18,10 @@
 
 		$me = $facebook->api('/me');
 		$conditions = array(
-			'User.mail' => $me['email']
+			'OR' => array(
+				'User.mail' => $me['email'],
+				'login' => 'fb:' . $me['id'],
+			)
 		);
 		$data = $this->User->find('all',compact('conditions'));
 		
@@ -47,7 +52,46 @@
 			$this->redirect('/account/login');						
 		}
 		
+		$ret = $facebook->api('/me/groups');
+		$groups = array();
+		foreach ($ret['data'] as $row) {
+			$groups[] = $row['id'];
+		}
+		
+		$ret = $this->CustomValue->find(
+			'all',
+			array(
+				'conditions' => array(
+					'CustomValue.customized_type' => 'Project',
+					'CustomField.name' => 'fbgroup',
+					'CustomValue.value' => $groups
+				)
+			)
+		);
+		
+		
+		$project_ids = array();
+		foreach($ret as $row) {
+			$project_ids[] = $row['CustomValue']['customized_id'];
+		}
+		
 		$this->logged_user($data[0]);
+		$memberships = Set::extract($this->currentuser['Membership'],'/project_id');
+		$updated = false;
+		foreach ($project_ids as $project_id) {
+			if (in_array($project_id, $memberships)) {
+				continue;
+			}
+			$this->Member->save(array(
+				'user_id' => $this->currentuser['User']['id'],
+				'project_id' => $project_id,
+				'role_id' => 3,
+			));
+			$updated = true;
+		}
+		if ($updated) {
+			$this->logged_user($data[0]);
+		}
 		$this->redirect('/');
 
 	}

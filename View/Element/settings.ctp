@@ -37,6 +37,14 @@
 );?>
 </p>
 
+<p>
+<?php echo __('to connect project and facebook group, create CustomField for Prject as "fbgroup".'); ?><br/>
+<?php echo $this->Html->link(
+	'Create CustomField',
+	'/custom_fields/add?type=ProjectCustomField'
+);?>
+</p>
+
 </div>
 
 <?php echo $this->Form->submit(__('Save')) ?>

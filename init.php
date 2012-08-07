@@ -1,6 +1,6 @@
 <?php
 $pluginContainer = ClassRegistry::getObject('PluginContainer');
-$pluginContainer->installed('cc_facebook','0.1');
+$pluginContainer->installed('cc_facebook','0.2');
 
 $hookContainer = ClassRegistry::getObject('HookContainer');
 $hookContainer->registerElementHook(
