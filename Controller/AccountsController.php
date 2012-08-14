@@ -6,7 +6,11 @@
 		'CustomValue',
 		'Member'
 	);
-		
+
+	public $components = array(
+		'CcFacebook.FBConnect'
+	);
+	
 	public function login() {
 		$facebook = new Facebook(
 			array(
