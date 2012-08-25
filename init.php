@@ -9,6 +9,12 @@ $hookContainer->registerElementHook(
 	false // it should be true when you want to inject before the target template.
 );
 
+$hookContainer->registerElementHook(
+	'issues/form', // target element name.
+	'../../Plugin/CcFacebook/View/Element/posttofacebook', // additional template you want to inject.
+	false // it should be true when you want to inject before the target template.
+);
+
 $settingContainer = ClassRegistry::getObject('SettingContainer');
 $settingContainer->addSystemSetting(array(
 	'name' => 'cc_facebook',
