@@ -1,0 +1,11 @@
+msgid "Create New Project for Facebook Group"
+msgstr "Facebookグループと連携するプロジェクトを作る"
+
+msgid "Your projects with Facebook group"
+msgstr "Facebookグループと連携したあなたのプロジェクト"
+
+msgid "Create new project for this group"
+msgstr "このグループ用のプロジェクトを作る"
+
+msgid "Post created project url to wall of Facebook Group"
+msgstr "プロジェクトのURLをグループのウォールに投稿する"
