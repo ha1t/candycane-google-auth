@@ -1,6 +1,17 @@
 <?php
+$menuContainer = ClassRegistry::getObject('MenuContainer');
+$menuContainer->addTopMenu(
+	array(
+		'url' => '/cc_facebook/fb_projects/index',
+		'class' => '',
+		'caption' => 'Facebook projects',
+		'logged' => false,
+		'admin' => false
+	)
+);
+
 $pluginContainer = ClassRegistry::getObject('PluginContainer');
-$pluginContainer->installed('cc_facebook','0.3');
+$pluginContainer->installed('cc_facebook','0.5');
 
 $hookContainer = ClassRegistry::getObject('HookContainer');
 $hookContainer->registerElementHook(
