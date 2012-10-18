@@ -1,28 +1,36 @@
 <?php
+define('GOOGLE_CLIENT_ID', 'your_google_client_id');
+define('GOOGLE_CLIENT_SECRET', 'your_google_client_secret');
+define('GOOGLE_REDIRECT_URI', APP_URL . 'callback_path');
+define('GOOGLE_DEVELOPER_KEY', 'your_google_account');
+
+define('GOOGLE_ALLOW_DOMAINS', 'example.com, example.jp');
+define('GOOGLE_ALLOW_EMAILS', 'example-com@gmail.com, example-jp@gmail.com');
+
 $menuContainer = ClassRegistry::getObject('MenuContainer');
 $menuContainer->addTopMenu(
 	array(
-		'url' => '/cc_facebook/fb_projects/index',
+		'url' => '/candycane_google_auth/google_projects/index',
 		'class' => '',
-		'caption' => 'Facebook projects',
+		'caption' => 'Google Auth projects',
 		'logged' => false,
 		'admin' => false
 	)
 );
 
 $pluginContainer = ClassRegistry::getObject('PluginContainer');
-$pluginContainer->installed('cc_facebook','0.5');
+$pluginContainer->installed('cc_google_auth', '0.1');
 
 $hookContainer = ClassRegistry::getObject('HookContainer');
 $hookContainer->registerElementHook(
 	'accounts/middlebox', // target element name.
-	'../../Plugin/CcFacebook/View/Element/login', // additional template you want to inject.
+	'../../Plugin/CcGoogleAuth/View/Element/login', // additional template you want to inject.
 	false // it should be true when you want to inject before the target template.
 );
 
 $hookContainer->registerElementHook(
 	'issues/form', // target element name.
-	'../../Plugin/CcFacebook/View/Element/posttofacebook', // additional template you want to inject.
+	'../../Plugin/CcGoogleAuth/View/Element/posttofacebook', // additional template you want to inject.
 	false // it should be true when you want to inject before the target template.
 );
 
@@ -32,6 +40,7 @@ $settingContainer->addSystemSetting(array(
 	'partial' => '../../Plugin/CcFacebook/View/Element/settings',
 	'label' => __('Facebook Plugin')
 ));
+
 if (!class_exists('Facebook')) {
 	require_once 'Vendor/facebook-php-sdk/src/facebook.php';
 }
