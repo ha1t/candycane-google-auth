@@ -42,6 +42,7 @@
 	)
 );?></p>
 
+<!--
 <p><label><?php echo __('Google Developer Key') ?></label>
 <?php echo $this->Form->input(
 	'google_developer_key',
@@ -52,6 +53,7 @@
 		'div' => false
 	)
 );?></p>
+-->
 
 <p><label><?php echo __('Google Allow Domains') ?></label>
 <?php echo $this->Form->input(
