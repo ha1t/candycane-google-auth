@@ -36,7 +36,7 @@ class GoogleAuth extends AppModel
     public static function verify($code)
     {
         if (!$code) {
-            throw new AuthDeniedException();
+            throw new InvalidArgumentException();
         }
 
         $client = self::getClient();
@@ -50,8 +50,9 @@ class GoogleAuth extends AppModel
             throw new PermissionDeniedException();
         }
 
-        $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
-        return array('identity' => $email, 'token' => $token);
+        $user['email'] = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+        $user['token'] = $token;
+        return $user;
     }
 
     /**
@@ -62,8 +63,13 @@ class GoogleAuth extends AppModel
         $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
         $tmp = explode('@', $email);
         $domain = array_pop($tmp);
+        $is_set_allow_domains = true;
+        $is_set_allow_emails = true;
 
         $allow_domains = explode(',', GOOGLE_ALLOW_DOMAINS);
+        if (current($allow_domains) == '') {
+            $is_set_allow_domains = false;
+        }
         foreach ($allow_domains as $v) {
             if ($domain === trim($v)) {
                 return true;
@@ -71,10 +77,17 @@ class GoogleAuth extends AppModel
         }
 
         $allow_emails = explode(',', GOOGLE_ALLOW_EMAILS);
+        if (current($allow_emails) == '') {
+            $is_set_allow_emails = false;
+        }
         foreach ($allow_emails as $v) {
             if ($email === trim($v)) {
                 return true;
             }
+        }
+
+        if (!$is_set_allow_domains && !$is_set_allow_emails) {
+            return true;
         }
 
         return false;
