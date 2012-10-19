@@ -1,35 +1,42 @@
 <?php
-class AccountsController extends CcFacebookAppController
+class AccountsController extends AppController
 {
     public $uses = array(
         'User',
-        'CustomValue',
-        'Member',
-        'GoogleAuth',
     );
 
     public function login()
     {
-        $me = $facebook->api('/me');
+        App::uses('GoogleAuth', 'CcGoogleAuth.Model');
+
+        $code = $_GET['code'];
+        try {
+            $result = GoogleAuth::verify($code);
+        } catch (Exception $e) {
+            $this->redirect('/');
+            return;
+        }
+
         $conditions = array(
             'OR' => array(
-                'User.mail' => $me['email'],
-                'login' => 'fb:' . $me['id'],
-            )
+                'User.mail' => $result['email'],
+                'login'     => 'google:' . $result['id'],
+            ),
         );
-        $data = $this->User->find('all', compact('conditions'));
+        $data = $this->User->find('all', array('conditions' => $conditions));
 
         if (count($data) > 1) {
             $this->Session->setFlash(__('dupulicated user account'), 'default', array('class' => 'flash flash_error'));
             $this->redirect('/account/login');
         }
 
-        if ( count($data) == 0 ) {
+        // create user
+        if (count($data) == 0) {
             $new_user = array(
-                'login' => 'fb:' . $me['id'],
-                'firstname' => $me['first_name'],
-                'lastname' => $me['last_name'],
-                'mail' => $me['email'],
+                'login' => 'google:' . $result['id'],
+                'firstname' => $result['given_name'],
+                'lastname' => $result['family_name'],
+                'mail' => $result['email'],
                 'admin' => 0,
                 'status' => 1,
             );
@@ -38,7 +45,7 @@ class AccountsController extends CcFacebookAppController
                 $this->Session->setFlash(__('fail registering user account'), 'default', array('class' => 'flash flash_error'));
                 $this->redirect('/account/login');
             }
-            $data = $this->User->find('all',compact('conditions'));
+            $data = $this->User->find('all', array('conditions' => $conditions));
         }
 
         if ( $data[0]['User']['status'] !== '1' ) {
@@ -47,22 +54,6 @@ class AccountsController extends CcFacebookAppController
         }
 
         $this->logged_user($data[0]);
-        $memberships = Set::extract($this->currentuser['Membership'],'/project_id');
-        $updated = false;
-        foreach ($project_ids as $project_id) {
-            if (in_array($project_id, $memberships)) {
-                continue;
-            }
-            $this->Member->save(array(
-                'user_id' => $this->currentuser['User']['id'],
-                'project_id' => $project_id,
-                'role_id' => 3,
-            ));
-            $updated = true;
-        }
-        if ($updated) {
-            $this->logged_user($data[0]);
-        }
 
         if (isset($this->request->query['back_url'])) {
             $this->redirect($this->request->query['back_url']);
