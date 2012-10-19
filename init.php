@@ -1,4 +1,6 @@
 <?php
+$plugin_name = 'CcGoogleAuth';
+
 $menuContainer = ClassRegistry::getObject('MenuContainer');
 $menuContainer->addTopMenu(
     array(
