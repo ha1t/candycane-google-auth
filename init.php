@@ -30,7 +30,7 @@ $settingContainer = ClassRegistry::getObject('SettingContainer');
 $settingContainer->addSystemSetting(array(
 	'name' => 'cc_google_auth',
 	'partial' => '../../Plugin/CcGoogleAuth/View/Element/settings',
-	'label' => __('Facebook Plugin')
+	'label' => __('Google Auth Plugin')
 ));
 
 //if (!class_exists('Facebook')) {
