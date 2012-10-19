@@ -1,5 +1,33 @@
 <?php
+/*
+ * @url https://developers.google.com/accounts/docs/OAuth2
+ * @url http://code.google.com/p/google-api-php-client/wiki/OAuth2
+ */
+
+require_once 'Vendor/google-api-php-client/src/apiClient.php';
+require_once 'Vendor/google-api-php-client/src/contrib/apiOauth2Service.php';
+
 $plugin_name = 'CcGoogleAuth';
+
+function is_set_settings($Settings)
+{
+    $columns = array(
+        'google_client_id',
+        'google_client_secret',
+        'google_redirect_uri',
+        //'google_developer_key',
+        //'google_allow_domains',
+        //'google_allow_emails',
+    );
+
+    foreach ($columns as $column) {
+        if (!isset($Settings->$column)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 $menuContainer = ClassRegistry::getObject('MenuContainer');
 $menuContainer->addTopMenu(
@@ -35,21 +63,21 @@ $settingContainer->addSystemSetting(array(
     'label' => __('Google Auth Plugin')
 ));
 
-//if (!class_exists('Facebook')) {
-//	require_once 'Vendor/facebook-php-sdk/src/facebook.php';
-//}
-
 $Setting = ClassRegistry::init('Setting');
+$columns = array(
+    'google_client_id',
+    'google_client_secret',
+    'google_redirect_uri',
+    'google_developer_key',
+    'google_allow_domains',
+    'google_allow_emails',
+);
 
-//$facebook = new Facebook(
-//	array(
-//		'appId' => $Setting->fb_appid,
-//		'secret' => $Setting->fb_secret,
-//	)
-//);
-//ClassRegistry::addObject('Facebook', $facebook);
+foreach ($columns as $column) {
+    define(strtoupper($column), $Setting->$column);
+}
 
-App::uses('CakeEventManager', 'Event');
+//App::uses('CakeEventManager', 'Event');
 //App::uses('ServiceFB', 'CcFacebook.Vendor');
 //$service = new ServiceFB();
 //CakeEventManager::instance()->attach(array($service,'afterIssueNewhandler'), 'Controller.Candy.issuesNewAfterSave');
