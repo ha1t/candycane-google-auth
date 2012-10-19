@@ -4,23 +4,12 @@ class AccountsController extends CcFacebookAppController
     public $uses = array(
         'User',
         'CustomValue',
-        'Member'
-    );
-
-    public $components = array(
-        'CcFacebook.FBConnect'
+        'Member',
+        'GoogleAuth',
     );
 
     public function login()
     {
-        $facebook = new Facebook(
-            array(
-                'appId' => $this->Setting->fb_appid,
-                'secret' => $this->Setting->fb_secret,
-            )
-        );
-        ClassRegistry::addObject('Facebook', $facebook);
-
         $me = $facebook->api('/me');
         $conditions = array(
             'OR' => array(
@@ -28,7 +17,7 @@ class AccountsController extends CcFacebookAppController
                 'login' => 'fb:' . $me['id'],
             )
         );
-        $data = $this->User->find('all',compact('conditions'));
+        $data = $this->User->find('all', compact('conditions'));
 
         if (count($data) > 1) {
             $this->Session->setFlash(__('dupulicated user account'), 'default', array('class' => 'flash flash_error'));
@@ -55,29 +44,6 @@ class AccountsController extends CcFacebookAppController
         if ( $data[0]['User']['status'] !== '1' ) {
             $this->Session->setFlash(__('account is not active.'), 'default', array('class' => 'flash flash_error'));
             $this->redirect('/account/login');
-        }
-
-        $ret = $facebook->api('/me/groups');
-        $groups = array();
-        foreach ($ret['data'] as $row) {
-            $groups[] = $row['id'];
-        }
-
-        $ret = $this->CustomValue->find(
-            'all',
-            array(
-                'conditions' => array(
-                    'CustomValue.customized_type' => 'Project',
-                    'CustomField.name' => 'fbgroup',
-                    'CustomValue.value' => $groups
-                )
-            )
-        );
-
-
-        $project_ids = array();
-        foreach($ret as $row) {
-            $project_ids[] = $row['CustomValue']['customized_id'];
         }
 
         $this->logged_user($data[0]);
@@ -119,21 +85,6 @@ class AccountsController extends CcFacebookAppController
             $this->currentuser = null;
             $this->Session->write('user_id', null);
         }
-    }
-
-    public function import_member()
-    {
-
-        //find project from identity
-
-        //find member from facebook group
-        $facebook = new Facebook(
-            array(
-                'appId' => $this->Setting->fb_appid,
-                'secret' => $this->Setting->fb_secret,
-            )
-        );
-        ClassRegistry::addObject('Facebook', $facebook);
     }
 }
 
