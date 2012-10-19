@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-require_once '../src/Google_Client.php';
+require_once '../src/apiClient.php';
 class BaseTest extends PHPUnit_Framework_TestCase {
   /**
-   * @var Google_Client
+   * @var apiClient
    */
   public static $client;
   public function __construct() {
@@ -27,7 +27,7 @@ class BaseTest extends PHPUnit_Framework_TestCase {
       global $apiConfig;
       $apiConfig['ioFileCache_directory'] = '/tmp/google-api-php-client/tests';
 
-      BaseTest::$client = new Google_Client();
+      BaseTest::$client = new apiClient();
       if (!BaseTest::$client->getAccessToken()) {
         BaseTest::$client->setAccessToken($apiConfig['oauth_test_token']);
       }

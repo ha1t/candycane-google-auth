@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '../../src/Google_Client.php';
+require_once '../../src/apiClient.php';
 
 defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
 
-$client = new Google_Client();
+$client = new apiClient();
 // Visit https://code.google.com/apis/console to
 // generate your oauth2_client_id, oauth2_client_secret, and to
 // register your oauth2_redirect_uri.
@@ -32,7 +32,6 @@ $client->setScopes(array(
   'https://www.googleapis.com/auth/tasks',
   'https://www.googleapis.com/auth/siteverification',
   'https://www.googleapis.com/auth/urlshortener',
-  'https://www.googleapis.com/auth/adsense.readonly',
 ));
 
 $authUrl = $client->createAuthUrl();

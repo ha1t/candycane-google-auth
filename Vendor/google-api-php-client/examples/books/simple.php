@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_BooksService.php';
+require_once '../../src/apiClient.php';
+require_once '../../src/contrib/apiBooksService.php';
 
-$client = new Google_Client();
+$client = new apiClient();
 $client->setApplicationName("My_Books_API_Example");
-$service = new Google_BooksService($client);
+$service = new apiBooksService($client);
 
 $optParams = array('filter' => 'free-ebooks');
 $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
