@@ -1,10 +1,6 @@
 <?php
 class ServiceFB
 {
-
-    /**
-     * @var Facebook 
-     */
     protected $facebook;
 
     /**
@@ -13,15 +9,14 @@ class ServiceFB
      */
     protected $candy;
 
-
     /**
      *
      * @var CakeRequest
      */
     protected $request;
 
-    public function __construct() {
-
+    public function __construct()
+    {
         $this->facebook = ClassRegistry::getObject('Facebook');
         App::uses('CandyHelper','View/Helper');
         $view = new View;
